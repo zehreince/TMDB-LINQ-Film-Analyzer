@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TMDB.Domain", "TMDB.Domain\TMDB.Domain.csproj", "{00B2BA0B-7D9F-47EF-931D-6C05D202558F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TMDB.Data", "TMDB.Data\TMDB.Data.csproj", "{653108F8-6B8B-42D6-9EE1-9667CF2DA23F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TMDB.Business", "TMDB.Business\TMDB.Business.csproj", "{BF23494E-52DC-4520-B6A0-ED1094C43B96}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TMDB.API", "TMDB.API\TMDB.API.csproj", "{6D933958-8F23-4716-A26D-DCB216896C0D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{00B2BA0B-7D9F-47EF-931D-6C05D202558F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00B2BA0B-7D9F-47EF-931D-6C05D202558F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00B2BA0B-7D9F-47EF-931D-6C05D202558F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00B2BA0B-7D9F-47EF-931D-6C05D202558F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{653108F8-6B8B-42D6-9EE1-9667CF2DA23F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{653108F8-6B8B-42D6-9EE1-9667CF2DA23F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{653108F8-6B8B-42D6-9EE1-9667CF2DA23F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{653108F8-6B8B-42D6-9EE1-9667CF2DA23F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF23494E-52DC-4520-B6A0-ED1094C43B96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF23494E-52DC-4520-B6A0-ED1094C43B96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF23494E-52DC-4520-B6A0-ED1094C43B96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF23494E-52DC-4520-B6A0-ED1094C43B96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D933958-8F23-4716-A26D-DCB216896C0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D933958-8F23-4716-A26D-DCB216896C0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D933958-8F23-4716-A26D-DCB216896C0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D933958-8F23-4716-A26D-DCB216896C0D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
