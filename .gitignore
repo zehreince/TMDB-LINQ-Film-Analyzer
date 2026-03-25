@@ -1,0 +1,14 @@
+
+# C# / .NET Core Backend
+
+bin/
+obj/
+.vs/
+*.user
+appsettings.Development.json
+
+#React /Node.js Frontend
+node_modules/
+dist/
+build/
+.env
