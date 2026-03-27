@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
+import Navbar from './components/layout/Navbar';
 import MovieList from './components/movies/MovieList';
+import LoadingSpinner from './components/ui/LoadingSpinner';
 
-// Tasarımı test etmek için kullandığımız sahte veri 
 const mockMovies = [
   { id: 1, title: "Melancholia", director: "Lars von Trier", releaseYear: 2011, imdbRating: 7.1, genre: "Drama", posterUrl: "https://image.tmdb.org/t/p/w500/1k1MUKzDPEs22EEMwQz3E8mWeB.jpg" },
   { id: 2, title: "Dogville", director: "Lars von Trier", releaseYear: 2003, imdbRating: 8.0, genre: "Crime", posterUrl: "https://image.tmdb.org/t/p/w500/8M2ReE2D2W7qO7TnaP91R7u5tCg.jpg" },
@@ -11,21 +12,19 @@ const mockMovies = [
 ];
 
 function App() {
-  return (
-    <div className="min-h-screen bg-dark text-white p-8 font-sans">
-      
-      <header className="mb-12 text-center">
-        <h1 className="text-4xl font-black text-brand tracking-widest uppercase drop-shadow-md">
-          TMDB Analyzer
-        </h1>
-        <p className="text-gray-400 mt-2 text-sm tracking-widest uppercase">
-          LINQ & React Film Analiz Platformu
-        </p>
-      </header>
+  const [loading, setLoading] = useState(false);
 
-     
-      <main className="max-w-7xl mx-auto">
-        <MovieList movies={mockMovies} />
+  return (
+    <div className="min-h-screen bg-dark text-white font-sans">
+      
+      <Navbar />
+
+      <main className="max-w-7xl mx-auto p-8 mt-4">
+        {loading ? (
+          <LoadingSpinner />
+        ) : (
+          <MovieList movies={mockMovies} />
+        )}
       </main>
       
     </div>
