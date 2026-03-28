@@ -8,4 +8,6 @@ public class MovieDto
     public int ReleaseYear { get; set; }
     public double ImdbRating { get; set; }
     public string Genre { get; set; }
+
+    public string? PosterUrl { get; set; }
 }

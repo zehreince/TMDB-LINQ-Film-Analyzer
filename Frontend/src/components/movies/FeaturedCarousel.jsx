@@ -3,30 +3,46 @@ import MovieCard from './MovieCard';
 
 const FeaturedCarousel = ({ movies }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [itemsPerPage, setItemsPerPage] = useState(4);
+
+  useEffect(() => {
+    const updateItemsPerPage = () => {
+      if (window.innerWidth < 640) setItemsPerPage(1);
+      else if (window.innerWidth < 768) setItemsPerPage(2);
+      else setItemsPerPage(4);
+    };
+
+    updateItemsPerPage();
+    window.addEventListener('resize', updateItemsPerPage);
+    return () => window.removeEventListener('resize', updateItemsPerPage);
+  }, []);
 
   if (!movies || movies.length === 0) return null;
 
-  const itemsPerPage = 4;
   const totalPages = Math.ceil(movies.length / itemsPerPage);
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentIndex((prev) => (prev === totalPages - 1 ? 0 : prev + 1));
+      setCurrentIndex((prev) => (prev >= totalPages - 1 ? 0 : prev + 1));
     }, 5000);
     return () => clearInterval(timer);
   }, [totalPages]);
 
+  useEffect(() => {
+    if (currentIndex >= totalPages) setCurrentIndex(0);
+  }, [totalPages, currentIndex]);
+
   const currentMovies = movies.slice(currentIndex * itemsPerPage, (currentIndex + 1) * itemsPerPage);
 
   return (
-    <div className="mb-12 relative">
+    <div className="mb-12 relative overflow-hidden">
       <h2 className="text-2xl font-bold text-white mb-6 uppercase tracking-wider drop-shadow-md border-l-4 border-brand pl-3">
         Ana Akım Filmler
       </h2>
       
-      <div className="flex gap-6 justify-center transition-all duration-500 ease-in-out">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 transition-all duration-500 justify-items-center">
         {currentMovies.map((movie) => (
-          <div key={movie.id} className="w-full sm:w-1/2 md:w-1/4">
+          <div key={movie.id} className="w-full flex justify-center">
             <MovieCard movie={movie} />
           </div>
         ))}
