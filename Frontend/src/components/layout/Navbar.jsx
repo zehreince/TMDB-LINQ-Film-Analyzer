@@ -1,30 +1,42 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
-const Navbar = () => {
+const Navbar = ({ onSearch }) => {
+  const [searchTerm, setSearchTerm] = useState("");
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (searchTerm.length >= 3) {
+        onSearch(searchTerm);
+      } else if (searchTerm.length === 0) {
+        onSearch(""); 
+      }
+    }, 800);
+
+    return () => clearTimeout(timer);
+  }, [searchTerm, onSearch]);
+
   return (
-    <nav className="bg-card border-b border-gray-800 py-4 px-8 sticky top-0 z-50 shadow-lg">
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-        
-        <div className="text-2xl font-black text-brand tracking-widest uppercase cursor-pointer drop-shadow-md whitespace-nowrap">
-          TMDB <span className="text-white">Analyzer</span>
-        </div>
-
-        <div className="w-full max-w-md relative">
-          <input 
-            type="text" 
-            placeholder="Film, yönetmen veya oyuncu ara..." 
-            className="w-full bg-[#14181c] border border-gray-700 text-sm text-white rounded-full px-4 py-2 focus:outline-none focus:border-brand transition-colors placeholder-gray-500"
-          />
-          <span className="absolute right-3 top-2 text-gray-500">🔍</span>
-        </div>
-
-        <div className="flex gap-8 text-sm font-medium text-gray-400 tracking-wider whitespace-nowrap">
-          <a href="#" className="hover:text-brand transition-colors duration-300">FİLMLER</a>
-          <a href="#" className="hover:text-brand transition-colors duration-300">İSTATİSTİKLER</a>
-        </div>
-        
+    <header className="py-6 flex flex-col items-center gap-6 border-b border-gray-800">
+      <h1 className="text-3xl font-black tracking-widest text-white">
+        <span className="text-brand text-green-500">TMDB</span> ANALYZER
+      </h1>
+      
+      <div className="relative w-full max-w-2xl px-4">
+        <input
+          type="text"
+          placeholder="Film, yönetmen veya oyuncu ara..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full bg-[#14181c] border border-gray-700 rounded-full py-3 px-6 text-gray-300 focus:outline-none focus:border-green-500 transition-colors"
+        />
+        <span className="absolute right-8 top-3 text-xl">🔍</span>
       </div>
-    </nav>
+
+      <nav className="flex gap-8 text-gray-400 font-semibold tracking-wider">
+        <a href="#" className="hover:text-white transition-colors">FİLMLER</a>
+        <a href="#" className="hover:text-white transition-colors">İSTATİSTİKLER</a>
+      </nav>
+    </header>
   );
 };
 

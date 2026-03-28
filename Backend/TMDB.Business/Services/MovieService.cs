@@ -15,25 +15,86 @@ public class MovieService
         _httpClient = new HttpClient();
     }
 
-    // TMDB'den Popüler Filmleri Çeken Asenkron Metot
-    public async Task<List<MovieDto>> GetPopularMoviesAsync()
+  private async Task<List<MovieDto>> FetchAndMapMoviesAsync(string url)
     {
-        var url = $"{_baseUrl}/movie/popular?api_key={_apiKey}&language=tr-TR";
-        var response = await _httpClient.GetFromJsonAsync<TmdbResponse>(url);
+        try
+        {
+            var genreUrl = $"{_baseUrl}/genre/movie/list?api_key={_apiKey}&language=tr-TR";
+            var genreResponse = await _httpClient.GetFromJsonAsync<TmdbGenreResponse>(genreUrl);
+            var genreMap = genreResponse?.Genres?.ToDictionary(g => g.Id, g => g.Name) ?? new Dictionary<int, string>();
 
-        if (response == null || response.Results == null) 
+            var response = await _httpClient.GetFromJsonAsync<TmdbResponse>(url);
+
+            if (response == null || response.Results == null) 
+                return new List<MovieDto>();
+
+            var movieTasks = response.Results.Select(async t => 
+            {
+                var directorName = await GetDirectorAsync(t.Id);
+                var genreName = t.GenreIds != null && t.GenreIds.Any() && genreMap.ContainsKey(t.GenreIds.First()) 
+                                ? genreMap[t.GenreIds.First()] : "Bilinmiyor";
+
+                return new MovieDto
+                {
+                    Id = t.Id,
+                    Title = t.Title,
+                    ReleaseYear = !string.IsNullOrEmpty(t.ReleaseDate) && t.ReleaseDate.Length >= 4 ? int.Parse(t.ReleaseDate.Substring(0, 4)) : 0,
+                    ImdbRating = t.VoteAverage,
+                    Director = directorName,
+                    Genre = genreName,
+                    PosterUrl = t.PosterPath
+                };
+            });
+
+            var movies = new List<MovieDto>();
+            foreach (var task in movieTasks)
+            {
+                movies.Add(await task);
+            }
+
+            return movies;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"\n--- TMDB BAĞLANTI HATASI --- \n{ex.Message}\n--------------------------\n");
+            return new List<MovieDto>();
+        }
+    }
+
+    public async Task<List<MovieDto>> GetPopularMoviesAsync(int page = 1)
+    {
+        var url = $"{_baseUrl}/movie/popular?api_key={_apiKey}&language=tr-TR&page={page}";
+        return await FetchAndMapMoviesAsync(url);
+    }
+
+    public async Task<List<MovieDto>> GetNowPlayingMoviesAsync()
+    {
+        var url = $"{_baseUrl}/movie/now_playing?api_key={_apiKey}&language=tr-TR&page=1";
+        return await FetchAndMapMoviesAsync(url);
+    }
+
+    private async Task<string> GetDirectorAsync(int movieId)
+    {
+        try 
+        {
+            var url = $"{_baseUrl}/movie/{movieId}/credits?api_key={_apiKey}";
+            var response = await _httpClient.GetFromJsonAsync<TmdbCreditsResponse>(url);
+            var director = response?.Crew?.FirstOrDefault(c => c.Job == "Director");
+            return director?.Name ?? "Bilinmiyor";
+        } 
+        catch 
+        {
+            return "Bilinmiyor";
+        }
+    }
+
+    public async Task<List<MovieDto>> SearchMoviesAsync(string query, int page = 1)
+    {
+        if (string.IsNullOrWhiteSpace(query)) 
             return new List<MovieDto>();
 
-        return response.Results.Select(t => new MovieDto
-        {
-            Id = t.Id,
-            Title = t.Title,
-            ReleaseYear = !string.IsNullOrEmpty(t.ReleaseDate) && t.ReleaseDate.Length >= 4 ? int.Parse(t.ReleaseDate.Substring(0, 4)) : 0,
-            ImdbRating = t.VoteAverage,
-            Director = "Bilinmiyor", 
-            Genre = "Bilinmiyor", 
-            PosterUrl = t.PosterPath 
-        }).ToList();
+        var url = $"{_baseUrl}/search/movie?api_key={_apiKey}&language=tr-TR&query={Uri.EscapeDataString(query)}&page={page}";
+        return await FetchAndMapMoviesAsync(url);
     }
 }
 
@@ -59,4 +120,37 @@ public class TmdbMovie
 
     [JsonPropertyName("poster_path")]
     public string PosterPath { get; set; }
+
+    [JsonPropertyName("genre_ids")]
+    public List<int> GenreIds { get; set; }
+}
+
+public class TmdbCreditsResponse
+{
+    [JsonPropertyName("crew")]
+    public List<TmdbCrew> Crew { get; set; }
+}
+
+public class TmdbCrew
+{
+    [JsonPropertyName("name")]
+    public string Name { get; set; }
+    
+    [JsonPropertyName("job")]
+    public string Job { get; set; }
+}
+
+public class TmdbGenreResponse
+{
+    [JsonPropertyName("genres")]
+    public List<TmdbGenre> Genres { get; set; }
+}
+
+public class TmdbGenre
+{
+    [JsonPropertyName("id")]
+    public int Id { get; set; }
+
+    [JsonPropertyName("name")]
+    public string Name { get; set; }
 }

@@ -37,7 +37,7 @@ const FeaturedCarousel = ({ movies }) => {
   return (
     <div className="mb-12 relative overflow-hidden">
       <h2 className="text-2xl font-bold text-white mb-6 uppercase tracking-wider drop-shadow-md border-l-4 border-brand pl-3">
-        Ana Akım Filmler
+        Gösterimdekiler
       </h2>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 transition-all duration-500 justify-items-center">

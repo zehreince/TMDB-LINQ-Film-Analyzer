@@ -1,42 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from './components/layout/Navbar';
-import MovieList from './components/movies/MovieList';
-import LoadingSpinner from './components/ui/LoadingSpinner';
 import FeaturedCarousel from './components/movies/FeaturedCarousel';
+import PopularMoviesSection from './components/movies/PopularMoviesSection';
+import SearchResultsSection from './components/movies/SearchResultsSection';
 
 function App() {
-  const [movies, setMovies] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [carouselMovies, setCarouselMovies] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
-    fetch('http://localhost:5043/api/Movies/popular')
-      .then(res => res.json())
-      .then(data => {
-        setMovies(data);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error("Veri çekme hatası:", err);
-        setLoading(false);
-      });
+    const fetchCarouselMovies = async () => {
+      try {
+        const response = await fetch('http://localhost:5043/api/Movies/now-playing');
+        const data = await response.json();
+        setCarouselMovies(data.slice(0, 10));
+      } catch (err) {
+        console.error("Vizyon filmleri çekilemedi:", err);
+      }
+    };
+    fetchCarouselMovies();
   }, []);
 
   return (
     <div className="min-h-screen bg-dark text-white font-sans">
-      <Navbar />
+      <Navbar onSearch={setSearchQuery} />
 
       <main className="max-w-7xl mx-auto p-8 mt-4">
-        {loading ? (
-          <LoadingSpinner />
+        {searchQuery.length >= 3 ? (
+          <SearchResultsSection query={searchQuery} />
         ) : (
           <>
-            <FeaturedCarousel movies={movies} />
-            
-            <div className="flex justify-between items-center mb-6 border-b border-gray-800 pb-2">
-              <h3 className="text-xl font-bold text-gray-300 uppercase tracking-wider">Tüm Filmler</h3>
-            </div>
-            
-            <MovieList movies={movies} />
+            {carouselMovies.length > 0 && <FeaturedCarousel movies={carouselMovies} />}
+            <PopularMoviesSection />
           </>
         )}
       </main>
