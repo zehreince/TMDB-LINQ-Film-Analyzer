@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Navbar from './components/layout/Navbar';
 import MovieList from './components/movies/MovieList';
 import LoadingSpinner from './components/ui/LoadingSpinner';
+import FeaturedCarousel from './components/movies/FeaturedCarousel';
 
 const mockMovies = [
   { id: 1, title: "Melancholia", director: "Lars von Trier", releaseYear: 2011, imdbRating: 7.1, genre: "Drama", posterUrl: "https://image.tmdb.org/t/p/w500/1k1MUKzDPEs22EEMwQz3E8mWeB.jpg" },
@@ -16,17 +17,23 @@ function App() {
 
   return (
     <div className="min-h-screen bg-dark text-white font-sans">
-      
       <Navbar />
 
       <main className="max-w-7xl mx-auto p-8 mt-4">
         {loading ? (
           <LoadingSpinner />
         ) : (
-          <MovieList movies={mockMovies} />
+          <>
+            <FeaturedCarousel movies={mockMovies} />
+            
+            <div className="flex justify-between items-center mb-6 border-b border-gray-800 pb-2">
+              <h3 className="text-xl font-bold text-gray-300 uppercase tracking-wider">Tüm Filmler</h3>
+            </div>
+            
+            <MovieList movies={mockMovies} />
+          </>
         )}
       </main>
-      
     </div>
   );
 }
